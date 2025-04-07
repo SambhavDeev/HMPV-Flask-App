@@ -1,0 +1,25 @@
+body {
+    background: #f8f9fa;
+}
+
+.card {
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.progress-bar {
+    transition: width 0.5s;
+}
+
+.btn-primary {
+    background: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-primary:hover {
+    background: #5a6268;
+    border-color: #545b62;
+}
