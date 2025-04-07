@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/SambhavDev/HMPV-Flask-App/main/static/pneumonia_banner.png" alt="Project Banner" width="800">
+  <img src="https://raw.githubusercontent.com/SambhavDev/HMPV-Flask-App/main/static/pneumonia_banner.png" alt= width="800">
   <h1><samp>⚕️</samp> HMPV-Flask-App: Pneumonia Detection from Chest X-Rays <samp>🩻</samp></h1>
   <p>
     A deep learning web application for classifying chest X-ray images as Pneumonia or Normal using a fine-tuned ResNet50 model.
