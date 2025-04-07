@@ -73,12 +73,11 @@ We implemented several key strategies during training to ensure robust model dev
 
 The dataset utilized for this project is the widely recognized **Chest X-ray Pneumonia dataset** sourced from Kaggle. The dataset is meticulously organized into the following directory structure:
 
-```bash
+
 chest_xray/
 ├── train/    # Training images (Pneumonia and Normal subdirectories)
 ├── val/      # Validation images (Pneumonia and Normal subdirectories)
 └── test/     # Testing images (Pneumonia and Normal subdirectories)
-'''
 
 ## <samp>📈</samp> ROC Curve & Insights
 
