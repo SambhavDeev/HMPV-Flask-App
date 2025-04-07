@@ -1,81 +1,105 @@
-# HMPV-Flask-App
-Pneumonia Detection using ResNet50 on Chest X-Ray Images
-# 📌 Project Overview
-This project aims to classify chest X-ray images into two categories: Pneumonia and Normal, leveraging the power of deep convolutional neural networks. After initial trials with VGG19, we adopted a more robust architecture, ResNet50, which provided significant improvements in model performance and generalization.
+<div align="center">
+  <img src="https://raw.githubusercontent.com/SambhavDev/HMPV-Flask-App/main/static/pneumonia_banner.png" alt="Project Banner" width="800">
+  <h1><samp>⚕️</samp> HMPV-Flask-App: Pneumonia Detection from Chest X-Rays <samp>🩻</samp></h1>
+  <p>
+    A deep learning web application for classifying chest X-ray images as Pneumonia or Normal using a fine-tuned ResNet50 model.
+  </p>
+</div>
 
-#🧠 Model: ResNet50 (Transfer Learning)
-We used ResNet50, a 50-layer deep CNN architecture pretrained on ImageNet. Its residual connections and deep structure make it highly effective for transfer learning in medical imaging tasks.
+<br>
 
-Input image size: 224 x 224
+## <samp>📌</samp> Project Overview
 
-Custom classification head added on top of the ResNet50 base:
+This project leverages the power of deep convolutional neural networks to accurately classify chest X-ray images into two critical categories: **Pneumonia** and **Normal**. Building upon initial experimentation with VGG19, we transitioned to the more robust **ResNet50** architecture, which demonstrated significant improvements in model performance and its ability to generalize to unseen data.
 
-Flatten → Dense(512, relu) → Dropout(0.5)
+## <samp>🧠</samp> Model: ResNet50 (Transfer Learning)
 
-Dense(128, relu) → Dropout(0.5)
+We harnessed the power of **ResNet50**, a 50-layer deep Convolutional Neural Network (CNN) architecture pre-trained on the extensive ImageNet dataset. Its innovative residual connections and deep structure make it exceptionally well-suited for transfer learning tasks, particularly in the domain of medical imaging.
 
-Dense(2, softmax) for binary classification
+**Model Architecture Details:**
 
-# 🔁 Data Augmentation
-To reduce overfitting and increase robustness, we applied aggressive data augmentation during training:
+* **Input Image Size:** `224 x 224` pixels
+* **Base Model:** Pre-trained ResNet50 (feature extraction layers were **frozen** during initial training)
+* **Custom Classification Head:**
+    ```
+    Flatten → Dense(512, activation='relu') → Dropout(0.5)
+            → Dense(128, activation='relu') → Dropout(0.5)
+            → Dense(2, activation='softmax')  # Binary classification (Pneumonia/Normal)
+    ```
 
-Rotation: ±30°
+## <samp>🔁</samp> Data Augmentation
 
-Width/Height Shift: 20%
+To mitigate the risk of overfitting and enhance the model's ability to generalize to diverse unseen data, we employed a comprehensive suite of aggressive data augmentation techniques during the training process:
 
-Zoom: [0.8, 1.2]
+* **Rotations:** Randomly rotated images by ±30 degrees.
+* **Shifts:** Randomly shifted image width and height by up to 20%.
+* **Zooming:** Randomly zoomed in/out on images within the range of [0.8, 1.2].
+* **Shearing:** Applied random shear transformations.
+* **Brightness Adjustments:** Randomly altered image brightness.
+* **Flipping:** Randomly flipped images horizontally.
+* **Preprocessing:** Utilized the `preprocess_input` function specifically designed for ResNet50 to normalize input pixel values.
 
-Shear, Brightness, Flip
+## <samp>📊</samp> Performance Comparison: ResNet50 vs VGG19
 
-Preprocessing: preprocess_input from ResNet50
+| Metric            | VGG19   | ResNet50 (This Model) | Improvement        |
+| ----------------- | ------- | --------------------- | ------------------ |
+| **Train Accuracy** | ~88%    | **~93.3%** | <font color="green">↑ 5.3%</font> |
+| **Validation Accuracy** | ~56%    | **~93.75%** | <font color="green">↑ 37.75%</font>|
+| **Best Val Loss** | ~0.66   | **~0.212** | <font color="green">↓ 0.448</font>|
+| **ROC-AUC Score** | -       | **0.97** | <font color="green">Excellent</font> |
+| **Test Accuracy** | -       | **0.89** | -                  |
+| **Weighted F1 Score**| -       | **0.89** | -                  |
+| **Parameters** | ~20M    | 75M (frozen base)     | -                  |
 
-# 📊 Performance Comparison: ResNet50 vs VGG19
-Metric	       VGG19	 ResNet50 (This Model)
+<br>
 
-Train Accuracy	~88%	 ~93.3%
+✅ **Key Takeaway:** ResNet50 demonstrated a significantly superior performance compared to VGG19, particularly in terms of validation accuracy and overall generalization capability.
 
-Val Accuracy	~56%	   93.75%
+## <samp>🧪</samp> Evaluation and Callbacks
 
-Best Val Loss	~0.66	    0.212
+We implemented several key strategies during training to ensure robust model development and prevent overfitting:
 
-ROC-AUC Score	          0.97
+* **EarlyStopping:** Monitored the validation loss and stopped training when it ceased to improve, preventing overfitting.
+* **ModelCheckpoint:** Saved the model weights that achieved the best performance on the validation set (`resnet50_best_model.h5`).
+* **ReduceLROnPlateau:** Dynamically reduced the learning rate when the validation loss plateaued, helping the model to fine-tune and potentially escape local minima.
 
-Test accuracy           0.89
+**Evaluation Metrics:**
 
-Weighted F1 Score       0.89
+* Accuracy
+* Loss
+* Receiver Operating Characteristic (ROC) Curve and Area Under the Curve (AUC)
 
-Params	~20M	75M (but frozen base)
-✅ ResNet50 significantly outperformed VGG19 in validation accuracy and generalization.
+## <samp>📂</samp> Dataset
 
-🧪 Evaluation and Callbacks
-Used EarlyStopping, ModelCheckpoint, and ReduceLROnPlateau
+The dataset utilized for this project is the widely recognized **Chest X-ray Pneumonia dataset** sourced from Kaggle. The dataset is meticulously organized into the following directory structure:
 
-Saved the best model: resnet50_best_model.h5
-
-Evaluation metrics included: accuracy, loss, ROC curve
-
-📂 Dataset
-The dataset used is the Chest X-ray Pneumonia dataset from Kaggle, organized in the following structure:
-
-bash
-Copy
-Edit
+```bash
 chest_xray/
-├── train/
-├── val/
-└── test/
-# 📈 ROC Curve & Insights
-The ROC curve plotted for the ResNet50 model indicates a high true positive rate with low false positive rate, validating the model's excellent discriminative power.
+├── train/    # Training images (Pneumonia and Normal subdirectories)
+├── val/      # Validation images (Pneumonia and Normal subdirectories)
+└── test/     # Testing images (Pneumonia and Normal subdirectories)
+'''
 
-# 💡 Conclusion
-This project demonstrated the superiority of ResNet50 over VGG19 for pneumonia detection from chest X-rays. The deeper architecture and residual connections allow for better feature learning, leading to improved accuracy, stability, and generalization on unseen data.
+## <samp>📈</samp> ROC Curve & Insights
 
-# 🚀 Future Work
-Fine-tuning deeper layers of ResNet50
+The Receiver Operating Characteristic (ROC) curve generated for the ResNet50 model visually confirms its strong discriminatory power. The curve demonstrates a high **True Positive Rate (TPR)** across various thresholds while maintaining a low **False Positive Rate (FPR)**, resulting in an impressive **AUC score of 0.97**. This indicates the model's excellent ability to distinguish between Pneumonia and Normal chest X-ray images.
 
-Applying Grad-CAM for visual explainability
+## <samp>💡</samp> Conclusion
 
-Exploring EfficientNet or Vision Transformers (ViTs)
+This project unequivocally highlights the superiority of the **ResNet50** architecture over VGG19 for the task of pneumonia detection using chest X-ray images. The deeper network structure and the incorporation of residual connections in ResNet50 enable more effective feature learning, leading to substantial improvements in accuracy, training stability, and the crucial ability to generalize well to unseen medical data.
 
-Feel free to clone, modify, and contribute to this project.
-For queries or contributions, contact: Sambhav Dev
+## <samp>🚀</samp> Future Work
+
+Moving forward, we plan to explore several avenues to further enhance the performance and applicability of this project:
+
+* **Fine-tuning Deeper Layers:** Experiment with unfreezing and fine-tuning more layers of the pre-trained ResNet50 model to potentially extract more task-specific features.
+* **Visual Explainability with Grad-CAM:** Implement Gradient-weighted Class Activation Mapping (Grad-CAM) to generate visual explanations highlighting the regions in the chest X-ray images that the model focuses on when making its predictions. This can improve trust and interpretability.
+* **Exploring Advanced Architectures:** Investigate the potential of more recent and efficient deep learning architectures such as **EfficientNet** or **Vision Transformers (ViTs)** for this task.
+
+<br>
+
+Feel free to **clone**, **modify**, and **contribute** to this project! Your feedback and contributions are highly valued.
+
+For any queries or potential collaborations, please don't hesitate to contact:
+
+**Sambhav Dev**
